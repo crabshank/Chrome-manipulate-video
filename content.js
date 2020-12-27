@@ -1,20 +1,9 @@
-var sdivs = [];
 var videoTags=[];
-var bdkCol="buttonface";
-var clck_a=-1;
-var t_a=0;
-var clck_b=0;
-var m_c=0;
-var m_l=0;
-var pg_e=0;
-var wh_e=1;
-var clk_e=0;
-var ip_e=0;
-var rc_e=0;
-var trk=0;
-var trk2=0;
+var sdivs=[];
 var vid_css=[];
-
+var corners=[];
+var crr={v:'',l:0,f:2};
+var timer;
 function get_src(vid){
 	if (vid.src !== "") {
 		return vid.src;
@@ -35,78 +24,6 @@ function removeEls(d, array) {
     return newArray;
 }
 
-function calcSp(i){
-if(clck_a==-1){
-	t_a=videoTags[i].currentTime;
-	videoTags[i].playbackRate=clse[i].valueAsNumber;
-	clck_a = performance.now();
-}else{
-for (let k=videoTags[i].buffered.length-1; k>=0; k--){	
-let t_i=videoTags[i].buffered.end(k);
-let s_i=videoTags[i].buffered.start(k);
-if(videoTags[i].currentTime<=t_i && videoTags[i].currentTime>=s_i){
-
-	if(t_i>t_a){
-		clck_b = performance.now();
-		lst=Math.floor((100000*((t_i-t_a)/(clck_b-clck_a))))*0.01;
-		videoTags[i].playbackRate=Math.min(clse[i].valueAsNumber,Math.max(1,lst));
-		t_a=t_i;
-		clck_a=performance.now();
-		break;
-	}
-}
-
-}
-}
-
-}
-
-function progress_hdl(i) {
-if(pg_e==1){
-if(videoTags[i].readyState>2){
-calcSp(i);
-}else{
-videoTags[i].playbackRate=1;
-}
-}
-}
-
-function ratechange_hdl(i) {
-if(rc_e==1){
-butn[i].innerHTML = "Fast forwarding: "+videoTags[i].playbackRate.toLocaleString('en-GB', {minimumFractionDigits: 0, maximumFractionDigits: 7})+"x";
-}
-}
-
-function cl_inp(i) {
-if(ip_e==1){
-videoTags[i].playbackRate=Math.min(16,Math.max(1,clse[i].valueAsNumber));
-calcSp(i);
-}
-}
-
-
-function cl_whl(evt,i) {
-	if(wh_e==1){
-	evt.preventDefault();
-	evt.stopPropagation();
-
-	if(evt.deltaY>0){
-		clse[i].value=(Math.max(1,clse[i].valueAsNumber-parseFloat(clse[i].step))).toLocaleString('en-GB', {minimumFractionDigits: 0, maximumFractionDigits: 7});
-		cl_inp(i);
-	}
-	if (evt.deltaY<0){
-		clse[i].value=(Math.min(16,clse[i].valueAsNumber+parseFloat(clse[i].step))).toLocaleString('en-GB', {minimumFractionDigits: 0, maximumFractionDigits: 7});
-		cl_inp(i);
-	}
-	}
-}
-
-function cl_clk() {
-if(clk_e==1){
-event.preventDefault();
-event.stopPropagation();
-}
-}
 
 chrome.runtime.onMessage.addListener(gotMessage);
 
@@ -120,8 +37,7 @@ function gotMessage(message, sender, sendResponse) {
 						function getStrms(){
 
 						                        var tmpVidTags = [
-    ...document.getElementsByTagName('video'),
-    ...document.getElementsByTagName('audio')
+    ...document.getElementsByTagName('video')
 ];
 
 if (videoTags.length==0){
@@ -165,6 +81,28 @@ for (let k = 0; k<tmpVidTags.length; k++) {
                         
 						}
 		
+		
+		                        function b_hide(b) {								
+                                b.style.cssText = "display: initial !important; visibility: initial !important; z-index: "+Number.MAX_SAFE_INTEGER+" !important; position: absolute !important; background-color: transparent !important; pointer-events: none !important;";
+								  clearTimeout(timer);
+								timer = setTimeout(function(){
+								let msd=false;
+								corners=[...b.childNodes];
+								for(let k=0, len=corners.length; k<len; k++){
+									if(corners[k].getAttribute("md")=="true"){
+										mst=true;
+										break;
+									}
+								}
+								if(msd){
+								b.style.cssText = "display: none !important; visibility: hidden !important;";
+								}
+								}, 6000);
+								
+								
+								
+                        }
+		
 
                         function createbutn(i, video, src) {
                        				for (let j=0; j<i; j++){
@@ -174,20 +112,190 @@ for (let k = 0; k<tmpVidTags.length; k++) {
 											vid_css[j]="";
 										}
 									}
-                                sdivs[i] = document.createElement("form");
-                                sdivs[i].innerHTML ='<input type="range" name="amountRange" min="-5" max="5" step="0.005" value="0" ondblclick="this.value=0" oninput="this.form.amountInput.value=this.value"/>z-tilt<input type="number" name="amountInput" min="-5" max="5" step="0.005" value="0" ondblclick="this.form.amountRange.value=0; this.value=0" oninput="this.form.amountRange.value=this.value"/><input type="range" name="amountRange1" min="-0.007" max="0.007" step="0.000005" value="0" ondblclick="this.value=0" oninput="this.form.amountInput1.value=this.value"/>x-tilt<input type="number" name="amountInput1" min="-0.007" max="0.007" step="0.000005" value="0" ondblclick="this.form.amountRange1.value=0;this.value=0" oninput="this.form.amountRange1.value=this.value"/><input type="range" name="amountRange2" min="-5" max="5" step="0.005" value="0" ondblclick="this.value=0" oninput="this.form.amountInput2.value=this.value"/>y-skew<input type="number" name="amountInput2" min="-5" max="5" step="0.005" value="0" ondblclick="this.form.amountRange2.value=0; this.value=0" oninput="this.form.amountRange2.value=this.value"/><input type="range" name="amountRange3" min="-0.007" max="0.007" step="0.000005" value="0"  ondblclick="this.value=0" oninput="this.form.amountInput3.value=this.value"/>y-tilt<input type="number" name="amountInput3" min="-0.007" max="0.007" step="0.000005" value="0" ondblclick="this.form.amountRange3.value=0; this.value=0" oninput="this.form.amountRange3.value=this.value"/><input type="range" name="amountRange4" min="0.01" max="10" step="0.01" value="1"  ondblclick="this.value=1" oninput="this.form.amountInput4.value=this.value"/>Scale<input type="number" name="amountInput4" min="0.01" max="10" step="0.01" value="1" ondblclick="this.form.amountRange4.value=1; this.value=1" oninput="this.form.amountRange4.value=this.value"/><input type="range" name="amountRange5" min="-100" max="100" step="0.5" value="0"  ondblclick="this.value=0" oninput="this.form.amountInput5.value=this.value"/>x-shift<input type="number" name="amountInput5"  min="-100" max="100" step="0.5" value="0" ondblclick="this.form.amountRange5.value=0; this.value=0" oninput="this.form.amountRange5.value=this.value"/><input type="range" name="amountRange6" min="-100" max="100" step="0.5" value="0"  ondblclick="this.value=0" oninput="this.form.amountInput6.value=this.value"/>y-shift<input type="number" name="amountInput6"  min="-100" max="100" step="0.5" value="0" ondblclick="this.form.amountRange6.value=0; this.value=0" oninput="this.form.amountRange6.value=this.value"/><input type="range" name="amountRange7" min="0" max="100" step="0.5" value="50"  ondblclick="this.value=50" oninput="this.form.amountInput7.value=this.value"/>x-prsp<input type="number" name="amountInput7"  min="0" max="100" step="0.5" value="50" ondblclick="this.form.amountRange7.value=50; this.value=50" oninput="this.form.amountRange7.value=this.value"/><input type="range" name="amountRange8" min="0" max="100" step="0.5" value="0"  ondblclick="this.value=0" oninput="this.form.amountInput8.value=this.value"/>y-prsp<input type="number" name="amountInput8"  min="0" max="100" step="0.5" value="0" ondblclick="this.form.amountRange8.value=0; this.value=0" oninput="this.form.amountRange8.value=this.value"/>';
-                                sdivs[i].style.cssText = "display: initial !important; visibility: initial !important; z-index: "+Number.MAX_SAFE_INTEGER+" !important; position: absolute !important; background-color: transparent !important;";
-								vid_css[i]=video.style.cssText;
-                                video.insertAdjacentElement('afterend', sdivs[i]);
-								sdivs[i].addEventListener("input", btclk(i, src));
-								sdivs[i].addEventListener("dblclick", btclk(i, src));
+									
+						sdivs[i] = document.createElement('section');
+						 sdivs[i].style.cssText = "display: initial !important; visibility: initial !important; z-index: "+Number.MAX_SAFE_INTEGER+" !important; position: absolute !important; background-color: transparent !important; pointer-events: none !important;";
+                         video.insertAdjacentElement('beforebegin', sdivs[i]);
+						var rect = video.getBoundingClientRect();
+						var rect2 = sdivs[i].getBoundingClientRect();
+						sdivs[i].style.height = rect.height+'px';
+						sdivs[i].style.width = rect.width+'px';
+						let h_off=rect.width;
+						let v_off=rect.height;
+						if(rect.left>rect2.left){
+							sdivs[i].style.left=(rect.left-rect2.left)+'px';
+						}else if(rect2.left>rect.left){
+							sdivs[i].style.left=(rect2.left-rect.left)+'px';
+						}
+						
+						if(rect.top>rect2.top){
+							sdivs[i].style.top=(rect.top-rect2.top)+'px';
+						}else if(rect2.top>rect.top){
+							sdivs[i].style.top=(rect2.top-rect.top)+'px';
+						}
+						
+						sdivs[i].innerHTML='<div style="position: inherit; pointer-events: all; border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%;">TL</div><div style="position: inherit; pointer-events: all;  border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%;">TR</div><div style="pointer-events: all;  border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%; position: inherit;">BL</div><div style="pointer-events: all; border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%; position: inherit;">BR</div>';
+						let corners=[...sdivs[i].childNodes];
+						crr.v=video;
+						crr.l=corners[0];
+						corners.forEach((el, ix) => {
+							//console.log(`Current index: ${ix}`);
+							//console.log(el);
+							if (ix==1){
+								el.style.left=(rect.right-rect.x-el.clientWidth)+'px';
+							}else if (ix==2){
+								el.style.top=(rect.bottom-rect.y-el.clientHeight)+'px';
+							}else if (ix==3){
+								el.style.top=(rect.bottom-rect.y-el.clientHeight)+'px';
+								el.style.left=(rect.right-rect.x-el.clientWidth)+'px';
+							}
+							
+							el.onmousedown = (event) => {
+								if(el.getAttribute("md")=="dbl"){
+								el.setAttribute("md", "false");
+								}else{
+								el.setAttribute("md", "true");
+								}
+								crr.v=video;
+								crr.l=el;
+							}
+							
+							el.ondblclick = (event) => {
+								event.preventDefault();
+								event.stopPropagation();
+								el.setAttribute("md", "dbl");
+								crr.v=video;
+								crr.l=el;
+							 corners=[...el.parentNode.childNodes];
+							for(let k=0, len=corners.length; k<len; k++){
+							if (k==0){
+								corners[k].style.top='0px';
+								corners[k].style.left='0px';
+							}else if (k==1){
+								corners[k].style.top='0px';
+								corners[k].style.left=(video.clientWidth-corners[k].clientWidth)+'px';
+							}else if (k==2){
+								corners[k].style.left='0px';
+								corners[k].style.top=(video.clientHeight-corners[k].clientHeight)+'px';
+							}else{
+								corners[k].style.top=(video.clientHeight-corners[k].clientHeight)+'px';
+								corners[k].style.left=(video.clientWidth-corners[k].clientWidth)+'px';
+							}
+							}
+							crr.v.style.transformOrigin="";
+							crr.v.style.transform="";
+							}	
+							
+							
+						});
+
+						window.addEventListener('mouseup', e => {
+							for (let k=0, len=corners.length; k<len;  k++){
+									corners[k].setAttribute("md", "false");
+									corners[k].style.backgroundColor='';
+									corners[k].style.color='';
+								}
+						});
+
+						window.addEventListener('mousemove', e => {
+								if(crr.l.getAttribute("md")=="true"){
+							btclk();
+							}
+						});
+                       	
+							
+							video.addEventListener('mousemove', e => {
+								 b_hide(sdivs[i]);
+							});
+							
                         }
 						
 
-                        function btclk(i, src) {
-                                return function() {
-									videoTags[i].style.cssText=vid_css[i]+'; transform-origin:'+sdivs[i].elements.amountRange7.valueAsNumber+'% '+sdivs[i].elements.amountRange8.valueAsNumber+'%; transform: matrix3d(1, '+sdivs[i].elements.amountRange.valueAsNumber+', 0,' +sdivs[i].elements.amountRange1.valueAsNumber+', '+sdivs[i].elements.amountRange2.valueAsNumber+', 1, 0, '+sdivs[i].elements.amountRange3.valueAsNumber+', 0, 0, 1, 0, 0, 0, 0, '+sdivs[i].elements.amountRange4.valueAsNumber+') translate('+sdivs[i].elements.amountRange5.valueAsNumber+'%, '+sdivs[i].elements.amountRange6.valueAsNumber+'%) !important';
-									}
+                        function btclk() {
+							if(crr.f>0){
+crr.f=0;
+								crr.l.style.backgroundColor='cyan';
+								crr.l.style.color='magenta';
+								crr.l.style.left=event.pageX+'px';
+								crr.l.style.top=event.pageY+'px';
+								
+let cr_pr=[...crr.l.parentNode.childNodes];
+								
+								let xy0=cr_pr[0].getBoundingClientRect();
+								let xy1=cr_pr[1].getBoundingClientRect();
+								let xy2=cr_pr[3].getBoundingClientRect();
+								let xy3=cr_pr[2].getBoundingClientRect();
+								//let xy_v=crr.v.getBoundingClientRect();
+								
+								
+		
+// TL TR BR BL		
+     let src=[ 
+        [0, 0],
+        [crr.v.clientWidth, 0],
+        [crr.v.clientWidth, crr.v.clientHeight],
+        [0, crr.v.clientHeight]
+      ];
+	  /*
+	  n_tw=Math.abs(xy0.x-xy1.x);
+	  n_lh=Math.abs(xy0.y-xy3.y);
+	  n_bw=Math.abs(xy2.x-xy3.x);
+	  n_rh=Math.abs(xy1.y-xy2.y);
+	  */
+     let dst=[
+	  [Math.max(0,xy0.left),Math.max(0,xy0.bottom)],
+	  [Math.max(0,xy1.left),Math.max(0,xy1.bottom)],
+	  [Math.max(0,xy2.left),Math.max(0,xy2.bottom)],
+	  [Math.max(0,xy3.left),Math.max(0,xy3.bottom)]
+	  ];
+									
+						  let count = 4;
+  let a = [];
+  let b = [];
+
+  for (let i = 0; i < 2 * count; ++i) {
+    a.push([0, 0, 0, 0, 0, 0, 0, 0]);
+    b.push(0);
+  }
+
+  for (let i = 0; i < count; ++i) {
+    let j = i + count;
+    a[i][0] = a[j][3] = src[i][0];
+    a[i][1] = a[j][4] = src[i][1];
+    a[i][2] = a[j][5] = 1;
+    a[i][3] = a[i][4] = a[i][5] =
+      a[j][0] = a[j][1] = a[j][2] = 0;
+    a[i][6] = -src[i][0] * dst[i][0];
+    a[i][7] = -src[i][1] * dst[i][0];
+    a[j][6] = -src[i][0] * dst[i][1];
+    a[j][7] = -src[i][1] * dst[i][1];
+    b[i] = dst[i][0];
+    b[j] = dst[i][1];
+  }
+
+  var x = numeric.solve(a, b);
+  // matrix3d is homogeneous coords in column major!
+  // the z coordinate is unused
+  var m = [
+    x[0], x[3],   0, x[6],
+    x[1], x[4],   0, x[7],
+       0,    0,   1,    0,
+    x[2], x[5],   0,    1
+  ];
+  let transform = "matrix3d(";
+  for (let i = 0; i < m.length - 1; ++i) {
+    transform += m[i] + ", ";
+  }
+  transform += m[15] + ")";
+
+  crr.v.style.transformOrigin="0 0";
+  crr.v.style.transform=transform;
+  crr.f=1;
+  
+  //Source: szym - https://stackoverflow.com/a/36217808
+								
+							}
+									
                                 }
 
 
