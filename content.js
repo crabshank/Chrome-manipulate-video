@@ -83,11 +83,27 @@ for (let k = 0; k<tmpVidTags.length; k++) {
 		
 		
 		                        function b_hide(b) {								
-                                b.style.cssText = "display: initial !important; visibility: initial !important; z-index: "+Number.MAX_SAFE_INTEGER+" !important; position: absolute !important; background-color: transparent !important; pointer-events: none !important;";
-								  clearTimeout(timer);
+								 corners=[...b.childNodes];
+								 b.style.setProperty("display", "initial", "important");
+								 b.style.setProperty("visibility", "initial", "important");
+								 b.style.setProperty("z-index", Number.MAX_SAFE_INTEGER, "important");	
+								 corners[0].style.setProperty("display", "initial", "important");
+								 corners[0].style.setProperty("visibility", "initial", "important");
+								 corners[0].style.setProperty("z-index", Number.MAX_SAFE_INTEGER, "important");
+								 corners[1].style.setProperty("display", "initial", "important");
+								 corners[1].style.setProperty("visibility", "initial", "important");
+								 corners[1].style.setProperty("z-index", Number.MAX_SAFE_INTEGER, "important");
+								 corners[2].style.setProperty("display", "initial", "important");
+								 corners[2].style.setProperty("visibility", "initial", "important");
+								 corners[2].style.setProperty("z-index", Number.MAX_SAFE_INTEGER, "important");
+								 corners[3].style.setProperty("display", "initial", "important");
+								 corners[3].style.setProperty("visibility", "initial", "important");
+								 corners[3].style.setProperty("z-index", Number.MAX_SAFE_INTEGER, "important");
+
+								 clearTimeout(timer);
 								timer = setTimeout(function(){
 								let msd=false;
-								corners=[...b.childNodes];
+								
 								for(let k=0, len=corners.length; k<len; k++){
 									if(corners[k].getAttribute("md")=="true"){
 										mst=true;
@@ -134,7 +150,7 @@ for (let k = 0; k<tmpVidTags.length; k++) {
 							sdivs[i].style.top=(rect2.top-rect.top)+'px';
 						}
 						
-						sdivs[i].innerHTML='<div style="position: inherit; pointer-events: all; border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%;">TL</div><div style="position: inherit; pointer-events: all;  border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%;">TR</div><div style="pointer-events: all;  border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%; position: inherit;">BL</div><div style="pointer-events: all; border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%; position: inherit;">BR</div>';
+						sdivs[i].innerHTML='<div style="display: initial !important; visibility: initial !important; z-index: '+Number.MAX_SAFE_INTEGER+' !important; position: inherit; pointer-events: all; border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%;">TL</div><div style="display: initial !important; visibility: initial !important; z-index: '+Number.MAX_SAFE_INTEGER+' !important; position: inherit; pointer-events: all;  border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%;">TR</div><div style="display: initial !important; visibility: initial !important; z-index: '+Number.MAX_SAFE_INTEGER+' !important; pointer-events: all;  border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%; position: inherit;">BL</div><div style="display: initial !important; visibility: initial !important; z-index: '+Number.MAX_SAFE_INTEGER+' !important; pointer-events: all; border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%; position: inherit;">BR</div>';
 						let corners=[...sdivs[i].childNodes];
 						crr.v=video;
 						crr.l=corners[0];
@@ -205,7 +221,7 @@ for (let k = 0; k<tmpVidTags.length; k++) {
                        	
 							
 							video.addEventListener('mousemove', e => {
-								 b_hide(sdivs[i]);
+								// b_hide(sdivs[i]);
 							});
 							
                         }
@@ -225,7 +241,8 @@ let cr_pr=[...crr.l.parentNode.childNodes];
 								let xy1=cr_pr[1].getBoundingClientRect();
 								let xy2=cr_pr[3].getBoundingClientRect();
 								let xy3=cr_pr[2].getBoundingClientRect();
-								//let xy_v=crr.v.getBoundingClientRect();
+								crr.v.style.transform='';
+								let xy_v=crr.v.getBoundingClientRect();
 								
 								
 		
@@ -242,11 +259,13 @@ let cr_pr=[...crr.l.parentNode.childNodes];
 	  n_bw=Math.abs(xy2.x-xy3.x);
 	  n_rh=Math.abs(xy1.y-xy2.y);
 	  */
+	  
+
      let dst=[
-	  [Math.max(0,xy0.left),Math.max(0,xy0.bottom)],
-	  [Math.max(0,xy1.left),Math.max(0,xy1.bottom)],
-	  [Math.max(0,xy2.left),Math.max(0,xy2.bottom)],
-	  [Math.max(0,xy3.left),Math.max(0,xy3.bottom)]
+	  [Math.max(0,xy0.left-xy_v.left),Math.max(0,xy0.top-xy_v.top)],
+	  [Math.max(0,xy1.right-xy_v.left),Math.max(0,xy1.top-xy_v.top)],
+	  [Math.max(0,xy2.right-xy_v.left),Math.max(0,xy2.bottom-xy_v.top)],
+	  [Math.max(0,xy3.left-xy_v.left),Math.max(0,xy3.bottom-xy_v.top)]
 	  ];
 									
 						  let count = 4;
