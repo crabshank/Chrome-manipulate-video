@@ -217,7 +217,7 @@ for (let k = 0; k<tmpVidTags.length; k++) {
 
 						window.addEventListener('mousemove', e => {
 								if(crr.l.getAttribute("md")=="true"){
-							btclk();
+							btclk(e);
 							}
 							b_hide(crr.l.parentNode);
 						});
@@ -226,7 +226,7 @@ for (let k = 0; k<tmpVidTags.length; k++) {
                         }
 						
 
-                        function btclk() {
+                        function btclk(e) {
 							if(crr.f>0){
 crr.f=0;
 								crr.v.style.setProperty("pointer-events", "none", "important");
@@ -241,10 +241,26 @@ let cr_pr=[...crr.l.parentNode.childNodes];
 								let xy1=cr_pr[1].getBoundingClientRect();
 								let xy2=cr_pr[3].getBoundingClientRect();
 								let xy3=cr_pr[2].getBoundingClientRect();
+								
+								
 								crr.v.style.transform='';
 								let xy_v=crr.v.getBoundingClientRect();
 								
-								
+								if(e.altKey){
+								if (crr.l===cr_pr[0] || crr.l===cr_pr[1]){ //TL||TR
+									let dist=Math.abs(xy1.right-xy0.left);
+									cr_pr[1].style.left=(0.5*dist+0.5*crr.v.clientWidth)+'px';
+									cr_pr[0].style.left=(0.5*crr.v.clientWidth-0.5*dist)+'px';
+								}else if (crr.l===cr_pr[3]|| crr.l===cr_pr[2]){ //BL||BR
+									let dist=Math.abs(xy3.right-xy2.left);
+									cr_pr[3].style.left=(0.5*dist+0.5*crr.v.clientWidth)+'px';
+									cr_pr[2].style.left=(0.5*crr.v.clientWidth-0.5*dist)+'px';
+								}
+								cr_pr[0].style.top=(crr.l===cr_pr[1])?cr_pr[1].style.top:cr_pr[0].style.top;
+								cr_pr[1].style.top=(crr.l===cr_pr[0])?cr_pr[0].style.top:cr_pr[1].style.top;
+								cr_pr[3].style.top=(crr.l===cr_pr[2])?cr_pr[2].style.top:cr_pr[3].style.top;
+								cr_pr[2].style.top=(crr.l===cr_pr[3])?cr_pr[3].style.top:cr_pr[2].style.top;
+								}
 		
 // TL TR BR BL		
      let src=[ 
@@ -253,13 +269,6 @@ let cr_pr=[...crr.l.parentNode.childNodes];
         [crr.v.clientWidth, crr.v.clientHeight],
         [0, crr.v.clientHeight]
       ];
-	  /*
-	  n_tw=Math.abs(xy0.x-xy1.x);
-	  n_lh=Math.abs(xy0.y-xy3.y);
-	  n_bw=Math.abs(xy2.x-xy3.x);
-	  n_rh=Math.abs(xy1.y-xy2.y);
-	  */
-	  
 
      let dst=[
 	  [Math.max(0,xy0.left-xy_v.left),Math.max(0,xy0.top-xy_v.top)],
