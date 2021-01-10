@@ -110,8 +110,9 @@ for (let k = 0; k<tmpVidTags.length; k++) {
 										break;
 									}
 								}
-								if(msd){
-								b.style.cssText = "display: none !important; visibility: hidden !important;";
+								if(!msd){
+								b.style.setProperty("display", "none", "important");
+								b.style.setProperty("visibility", "hidden", "important");
 								}
 								}, 6000);
 								
@@ -206,6 +207,7 @@ for (let k = 0; k<tmpVidTags.length; k++) {
 						});
 
 						window.addEventListener('mouseup', e => {
+							crr.v.style.setProperty("pointer-events", "", "important");
 							for (let k=0, len=corners.length; k<len;  k++){
 									corners[k].setAttribute("md", "false");
 									corners[k].style.backgroundColor='';
@@ -217,12 +219,9 @@ for (let k = 0; k<tmpVidTags.length; k++) {
 								if(crr.l.getAttribute("md")=="true"){
 							btclk();
 							}
+							b_hide(crr.l.parentNode);
 						});
                        	
-							
-							video.addEventListener('mousemove', e => {
-								// b_hide(sdivs[i]);
-							});
 							
                         }
 						
@@ -230,8 +229,9 @@ for (let k = 0; k<tmpVidTags.length; k++) {
                         function btclk() {
 							if(crr.f>0){
 crr.f=0;
+								crr.v.style.setProperty("pointer-events", "none", "important");
 								crr.l.style.backgroundColor='cyan';
-								crr.l.style.color='magenta';
+								crr.l.style.color='magenta'; 	
 								crr.l.style.left=event.pageX+'px';
 								crr.l.style.top=event.pageY+'px';
 								
