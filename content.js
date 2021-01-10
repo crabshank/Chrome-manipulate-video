@@ -106,7 +106,7 @@ for (let k = 0; k<tmpVidTags.length; k++) {
 								
 								for(let k=0, len=corners.length; k<len; k++){
 									if(corners[k].getAttribute("md")=="true"){
-										mst=true;
+										msd=true;
 										break;
 									}
 								}
