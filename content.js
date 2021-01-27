@@ -25,6 +25,22 @@ function removeEls(d, array) {
 }
 
 
+function eligVid(vid){
+if((get_src(vid)!='') && (vid.readyState != 0)){
+	return true;
+}else{
+	return false;
+}
+}
+
+function simpleCopyArray(array){
+		var newArray = [];
+	    for (let i = 0; i < array.length; i++) {
+            newArray.push(array[i]);
+		}
+		return newArray;
+}
+
 chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage(message, sender, sendResponse) {
@@ -41,28 +57,31 @@ function gotMessage(message, sender, sendResponse) {
 ];
 
 if (videoTags.length==0){
-	videoTags=tmpVidTags;
-	  trk=0;
-	for (let k = 0; k<videoTags.length; k++) {
-	if (!((get_src(videoTags[k])!='') && (videoTags[k].readyState != 0))) {
-		 videoTags=removeEls(videoTags[k], videoTags);
-	}
-	}
+	videoTags=simpleCopyArray(tmpVidTags);
+	
+	trk=0;
+		for (let k = 0; k<videoTags.length; k++) {
+			if (!eligVid(videoTags[k])) {
+				videoTags=removeEls(videoTags[k], videoTags);
+			}
+		}
 }else{
-		  trk2=(videoTags.length==0)?0:videoTags.length;
-		  
-for (let k = 0; k<tmpVidTags.length; k++) {
-	if (!videoTags.includes(tmpVidTags[k])) {
-		 videoTags.push(tmpVidTags[k]);
-		 trk=trk2;
-	}
-}
-	for (let k = trk; k<videoTags.length; k++) {
-	if (!((get_src(videoTags[k])!='') && (videoTags[k].readyState != 0))) {
-		 videoTags=removeEls(videoTags[k], videoTags);
-		 trk--;
-	}
-	}
+	
+	trk2=videoTags.length;
+
+		for (let k = 0; k<tmpVidTags.length; k++) {
+			if (!checkInclude(videoTags,tmpVidTags[k])) {
+				videoTags.push(tmpVidTags[k]);
+				trk=trk2;
+			}
+		}
+		
+		for (let k = trk; k<videoTags.length; k++) {
+				if (!eligVid(videoTags[k])) {
+				videoTags=removeEls(videoTags[k], videoTags);
+				trk--;
+				}
+		}
 
 }
    
