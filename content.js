@@ -334,9 +334,10 @@ let cr_pr=[...crr.l.parentNode.childNodes];
     transform += m[i] + ", ";
   }
   transform += m[15] + ")";
-
-  crr.v.style.transformOrigin="0 0";
-  crr.v.style.transform=transform;
+  
+  crr.v.style.setProperty('transform',transform,'important');
+  crr.v.style.setProperty('transform-origin','0px 0px','important');
+  
   crr.f=1;
   
   //Source: szym - https://stackoverflow.com/a/36217808
