@@ -171,33 +171,10 @@ if (videoTags.length==0){
 						}
 						
 						sdivs[i].innerHTML='<div style="display: initial !important; visibility: initial !important; z-index: '+Number.MAX_SAFE_INTEGER+' !important; position: inherit; pointer-events: all; border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%;">TL</div><div style="display: initial !important; visibility: initial !important; z-index: '+Number.MAX_SAFE_INTEGER+' !important; position: inherit; pointer-events: all;  border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%;">TR</div><div style="display: initial !important; visibility: initial !important; z-index: '+Number.MAX_SAFE_INTEGER+' !important; pointer-events: all;  border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%; position: inherit;">BL</div><div style="display: initial !important; visibility: initial !important; z-index: '+Number.MAX_SAFE_INTEGER+' !important; pointer-events: all; border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%; position: inherit;">BR</div>';
-						let corners=[...sdivs[i].childNodes];
-						crr.v=video;
-						crr.l=corners[0];
-						corners.forEach((el, ix) => {
-							//console.log(`Current index: ${ix}`);
-							//console.log(el);
-							if (ix==1){
-								el.style.left=(rect.right-rect.x-el.clientWidth)+'px';
-							}else if (ix==2){
-								el.style.top=(rect.bottom-rect.y-el.clientHeight)+'px';
-							}else if (ix==3){
-								el.style.top=(rect.bottom-rect.y-el.clientHeight)+'px';
-								el.style.left=(rect.right-rect.x-el.clientWidth)+'px';
-							}
-							
-							el.onmousedown = (event) => {
-								if(el.getAttribute("md")=="dbl"){
-								el.setAttribute("md", "false");
-								}else{
-								el.setAttribute("md", "true");
-								}
-								crr.v=video;
-								crr.l=el;
-							}
-							
-							el.ondblclick = (event) => {
-								event.preventDefault();
+						
+						
+						function resetCnrs(el,event){
+									event.preventDefault();
 								event.stopPropagation();
 								el.setAttribute("md", "dbl");
 								crr.v=video;
@@ -220,6 +197,41 @@ if (videoTags.length==0){
 							}
 							crr.v.style.transformOrigin="";
 							crr.v.style.transform="";
+						}
+						
+						let corners=[...sdivs[i].childNodes];
+						crr.v=video;
+						crr.l=corners[0];
+						corners.forEach((el, ix) => {
+							//console.log(`Current index: ${ix}`);
+							//console.log(el);
+							if (ix==1){
+								el.style.left=(rect.right-rect.x-el.clientWidth)+'px';
+							}else if (ix==2){
+								el.style.top=(rect.bottom-rect.y-el.clientHeight)+'px';
+							}else if (ix==3){
+								el.style.top=(rect.bottom-rect.y-el.clientHeight)+'px';
+								el.style.left=(rect.right-rect.x-el.clientWidth)+'px';
+							}
+							
+							el.onmousedown = (event) => {
+								if(event.ctrlKey){
+									resetCnrs(el,event);
+								}else{
+									if(el.getAttribute("md")=="dbl"){
+									el.setAttribute("md", "false");
+									}else{
+									el.setAttribute("md", "true");
+									}
+									crr.v=video;
+									crr.l=el;
+								}
+								
+							}
+							
+							
+							el.ondblclick = (event) => {
+								resetCnrs(el,event);
 							}	
 							
 							
