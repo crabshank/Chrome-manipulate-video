@@ -257,6 +257,10 @@ if (videoTags.length==0){
 								corners[k].style.top=(video.clientHeight-corners[k].clientHeight)+'px';
 								corners[k].style.left=(video.clientWidth-corners[k].clientWidth)+'px';
 							}
+							
+								corners[k].setAttribute('left_c',window.getComputedStyle(corners[k],null).left);
+								corners[k].setAttribute('top_c',window.getComputedStyle(corners[k],null).top);	
+
 							}
 							crr.v.style.transformOrigin="";
 							crr.v.style.transform="";
@@ -276,6 +280,8 @@ if (videoTags.length==0){
 								el.style.top=(rect.bottom-rect.y-el.clientHeight)+'px';
 								el.style.left=(rect.right-rect.x-el.clientWidth)+'px';
 							}
+								el.setAttribute('left_c',window.getComputedStyle(el,null).left);
+								el.setAttribute('top_c',window.getComputedStyle(el,null).top);	
 							
 							el.onmousedown = (event) => {
 								if(event.ctrlKey){
@@ -381,6 +387,15 @@ function doTransform(e,vid,crnrs,local){
 									xy2=crnrs[3].getBoundingClientRect();
 									xy3=crnrs[2].getBoundingClientRect();
 								}
+		
+								crnrs[0].setAttribute('left_c',window.getComputedStyle(crnrs[0],null).left);
+								crnrs[0].setAttribute('top_c',window.getComputedStyle(crnrs[0],null).top);	
+								crnrs[1].setAttribute('left_c',window.getComputedStyle(crnrs[1],null).left);
+								crnrs[1].setAttribute('top_c',window.getComputedStyle(crnrs[1],null).top);	
+								crnrs[2].setAttribute('left_c',window.getComputedStyle(crnrs[2],null).left);
+								crnrs[2].setAttribute('top_c',window.getComputedStyle(crnrs[2],null).top);	
+								crnrs[3].setAttribute('left_c',window.getComputedStyle(crnrs[3],null).left);
+								crnrs[3].setAttribute('top_c',window.getComputedStyle(crnrs[3],null).top);
 		
 // TL TR BR BL		
      let src=[ 
