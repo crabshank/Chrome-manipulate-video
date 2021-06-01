@@ -358,11 +358,21 @@ let cr_pr=[...crr.l.parentNode.childNodes];
 
 
 function doTransform(e,vid,crnrs,local){
+								let invis=false;
+								if(window.getComputedStyle(crnrs[0].parentElement,null).display==='none'){
+									invis=true;
+									crnrs[0].parentElement.style.setProperty("display", "initial", "important");
+									crnrs[0].parentElement.style.setProperty("visibility", "visible", "important");
+								}
+								
 								let xy0=crnrs[0].getBoundingClientRect();
 								let xy1=crnrs[1].getBoundingClientRect();
 								let xy2=crnrs[3].getBoundingClientRect();
 								let xy3=crnrs[2].getBoundingClientRect();
 								
+								if(invis){
+								 b_hide(crnrs[0].parentElement);
+								}
 								
 								vid.style.transform='';
 								let xy_v=vid.getBoundingClientRect();
