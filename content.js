@@ -344,10 +344,23 @@ crr.f=0;
 								crr.v.style.setProperty('-webkit-transition','none','important');
 								crr.l.style.backgroundColor='cyan';
 								crr.l.style.color='magenta'; 	
-								crr.l.style.left=event.pageX+'px';
-								crr.l.style.top=event.pageY+'px';
 								
 let cr_pr=[...crr.l.parentNode.childNodes];
+						// TR BR BL
+							
+							if(crr.l===cr_pr[1]){
+								crr.l.style.left=event.pageX-crr.l.clientWidth+'px';
+								crr.l.style.top=event.pageY+'px';
+							}else if(crr.l===cr_pr[3]){
+								crr.l.style.left=event.pageX-crr.l.clientWidth+'px';
+								crr.l.style.top=event.pageY-crr.l.clientHeight+'px';
+							}else if(crr.l===cr_pr[2]){
+								crr.l.style.left=event.pageX+'px';
+								crr.l.style.top=event.pageY-crr.l.clientHeight+'px';
+							}else{
+								crr.l.style.left=event.pageX+'px';
+								crr.l.style.top=event.pageY+'px';
+							}
 								
 								doTransform(e,crr.v,cr_pr,true);
 
@@ -417,9 +430,9 @@ function doTransform(e,vid,crnrs,local){
 
      let dst=[
 	  [Math.max(0,xy0.left-xy_v.left),Math.max(0,xy0.top-xy_v.top)],
-	  [Math.max(0,Math.min(xy_v.right,xy1.right-xy_v.left)),Math.max(0,xy1.top-xy_v.top)],
-	  [Math.max(0,Math.min(xy_v.right,xy2.right-xy_v.left)),Math.max(0,Math.min(xy_v.bottom,xy2.bottom-xy_v.top))],
-	  [Math.max(0,xy3.left-xy_v.left),Math.max(0,Math.min(xy_v.bottom,xy3.bottom-xy_v.top))]
+	  [Math.max(0,xy1.right-xy_v.left),Math.max(0,xy1.top-xy_v.top)],
+	  [Math.max(0,xy2.right-xy_v.left),Math.max(0,xy2.bottom-xy_v.top)],
+	  [Math.max(0,xy3.left-xy_v.left),Math.max(0,xy3.bottom-xy_v.top)]
 	  ];
 									
 						  let count = 4;
