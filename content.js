@@ -417,9 +417,9 @@ function doTransform(e,vid,crnrs,local){
 
      let dst=[
 	  [Math.max(0,xy0.left-xy_v.left),Math.max(0,xy0.top-xy_v.top)],
-	  [Math.max(0,xy1.right-xy_v.left),Math.max(0,xy1.top-xy_v.top)],
-	  [Math.max(0,xy2.right-xy_v.left),Math.max(0,xy2.bottom-xy_v.top)],
-	  [Math.max(0,xy3.left-xy_v.left),Math.max(0,xy3.bottom-xy_v.top)]
+	  [Math.max(0,Math.min(xy_v.right,xy1.right-xy_v.left)),Math.max(0,xy1.top-xy_v.top)],
+	  [Math.max(0,Math.min(xy_v.right,xy2.right-xy_v.left)),Math.max(0,Math.min(xy_v.bottom,xy2.bottom-xy_v.top))],
+	  [Math.max(0,xy3.left-xy_v.left),Math.max(0,Math.min(xy_v.bottom,xy3.bottom-xy_v.top))]
 	  ];
 									
 						  let count = 4;
