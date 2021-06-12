@@ -186,6 +186,8 @@ if (videoTags.length==0){
 								crnrs[2].setAttribute('top_c',window.getComputedStyle(crnrs[2],null).top);	
 								crnrs[3].setAttribute('left_c',window.getComputedStyle(crnrs[3],null).left);
 								crnrs[3].setAttribute('top_c',window.getComputedStyle(crnrs[3],null).top);
+								sdivs[i].setAttribute('wdt_v',vids[i].clientWidth);
+								sdivs[i].setAttribute('hgt_v',vids[i].clientHeight);
 								
 						function switchCnrs(el,vid){
 								event.preventDefault();
@@ -216,10 +218,13 @@ if (videoTags.length==0){
 												crnrs[k].style.top=(vid.clientHeight-crnrs[k].clientHeight)+'px';
 												crnrs[k].style.left=(vid.clientWidth-crnrs[k].clientWidth)+'px';
 											}
+											
 									crnrs[k].setAttribute("md", "false");
 									crnrs[k].style.backgroundColor='';
 									crnrs[k].style.color='';
 										}
+										el.setAttribute('wdt_v',vid.clientWidth);
+								el.setAttribute('hgt_v',vid.clientHeight);
 												vid.style.transformOrigin="";
 												vid.style.transform="";
 											vid.setAttribute('toAdj','true');
@@ -262,6 +267,8 @@ if (videoTags.length==0){
 								corners[k].setAttribute('top_c',window.getComputedStyle(corners[k],null).top);	
 
 							}
+							el.parentNode.setAttribute('wdt_v',video.clientWidth);
+								el.parentNode.setAttribute('hgt_v',video.clientHeight);
 							crr.v.style.transformOrigin="";
 							crr.v.style.transform="";
 						}
@@ -302,7 +309,9 @@ if (videoTags.length==0){
 							el.ondblclick = (event) => {
 								resetCnrs(el,event);
 							}	
-							
+							sdivs[i].setAttribute('wdt_v',video.clientWidth);
+								sdivs[i].setAttribute('hgt_v',video.clientHeight);
+								
 							
 						});
 
@@ -321,7 +330,34 @@ if (videoTags.length==0){
 							}
 							b_hide(crr.l.parentNode);
 						});					
-
+						
+						
+						document.addEventListener('fullscreenchange',() => {
+let cr=[...crr.l.parentNode.childNodes];
+let rect=crr.v.getBoundingClientRect();
+for (let k=0, len=cr.length; k<len;  k++){
+	let ml=0;
+	let mt=0;
+	 if (k==1){
+								ml=cr[k].clientWidth;
+							}else if (k==2){
+								mt=cr[k].clientHeight;
+								ml=-cr[k].clientWidth;
+							}else if(k==3){
+								mt=cr[k].clientHeight;
+								}
+	let lf=((parseFloat(cr[k].getAttribute('left_c'))/parseFloat(crr.l.parentNode.getAttribute('wdt_v')))*rect.width+rect.left-ml)+'px';
+	let tp=((parseFloat(cr[k].getAttribute('top_c'))/parseFloat(crr.l.parentNode.getAttribute('hgt_v')))*rect.height+rect.top-mt)+'px';
+									cr[k].style.left=lf;
+								cr[k].style.top=tp;
+								cr[k].setAttribute('left_c',lf);
+								cr[k].setAttribute('top_c',tp);	
+									}
+									crr.l.parentNode.setAttribute('wdt_v',rect.width);
+								crr.l.parentNode.setAttribute('hgt_v',rect.height);
+								
+});
+						
 						window.addEventListener('keydown', e => {
 							if(e.keyCode===223 && e.ctrlKey && e.shiftKey){
 								for(let i=0; i<sdivs.length; i++){
@@ -390,7 +426,7 @@ function doTransform(e,vid,crnrs,local){
 								vid.style.transform='';
 								let xy_v=vid.getBoundingClientRect();
 								
-								if(!!e && e.altKey && local){
+								if(!!e && !e.altKey && local){
 									if (crr.l===crnrs[0] || crr.l===crnrs[1]){ //TL||TR
 										let dist=Math.abs(xy1.right-xy0.left);
 										crnrs[1].style.left=(0.5*dist+0.5*vid.clientWidth)+'px';
@@ -419,6 +455,10 @@ function doTransform(e,vid,crnrs,local){
 								crnrs[2].setAttribute('top_c',window.getComputedStyle(crnrs[2],null).top);	
 								crnrs[3].setAttribute('left_c',window.getComputedStyle(crnrs[3],null).left);
 								crnrs[3].setAttribute('top_c',window.getComputedStyle(crnrs[3],null).top);
+								
+								crnrs[0].parentElement.setAttribute('wdt_v',vid.clientWidth);
+								crnrs[0].parentElement.setAttribute('hgt_v',vid.clientHeight);
+								
 		
 // TL TR BR BL		
      let src=[ 
