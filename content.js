@@ -283,7 +283,7 @@ if (videoTags.length==0){
 								el.setAttribute('left_c',window.getComputedStyle(el,null).left);
 								el.setAttribute('top_c',window.getComputedStyle(el,null).top);	
 							
-							el.onmousedown = (event) => {
+							el.onpointerdown = (event) => {
 								if(event.ctrlKey){
 									resetCnrs(el,event);
 								}else{
@@ -306,7 +306,7 @@ if (videoTags.length==0){
 							
 						});
 
-						window.addEventListener('mouseup', e => {
+						window.addEventListener('pointerup', e => {
 							crr.v.style.setProperty("pointer-events", "", "important");
 							for (let k=0, len=corners.length; k<len;  k++){
 									corners[k].setAttribute("md", "false");
@@ -315,7 +315,7 @@ if (videoTags.length==0){
 								}
 						});
 
-						window.addEventListener('mousemove', e => {
+						window.addEventListener('pointermove', e => {
 								if(crr.l.getAttribute("md")=="true"){
 							btclk(e);
 							}
