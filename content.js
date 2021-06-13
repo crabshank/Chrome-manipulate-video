@@ -339,12 +339,12 @@ for (let k=0, len=cr.length; k<len;  k++){
 	let ml=0;
 	let mt=0;
 	 if (k==1){
-								ml=cr[k].clientWidth;
+								ml=-0.5*cr[k].clientWidth;
 							}else if (k==2){
-								mt=cr[k].clientHeight;
-								ml=-cr[k].clientWidth;
+								mt=-0.5*cr[k].clientHeight;
 							}else if(k==3){
-								mt=cr[k].clientHeight;
+								mt=-0.5*cr[k].clientHeight;
+									ml=-0.5*cr[k].clientWidth;
 								}
 	let lf=((parseFloat(cr[k].getAttribute('left_c'))/parseFloat(crr.l.parentNode.getAttribute('wdt_v')))*rect.width+rect.left-ml)+'px';
 	let tp=((parseFloat(cr[k].getAttribute('top_c'))/parseFloat(crr.l.parentNode.getAttribute('hgt_v')))*rect.height+rect.top-mt)+'px';
