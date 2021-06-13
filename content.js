@@ -386,16 +386,20 @@ let cr_pr=[...crr.l.parentNode.childNodes];
 							
 							if(crr.l===cr_pr[1]){
 								crr.l.style.left=event.pageX-crr.l.clientWidth+'px';
-								crr.l.style.top=event.pageY+'px';
+								if(e.altKey){
+								crr.l.style.top=event.pageY+'px';}
 							}else if(crr.l===cr_pr[3]){
 								crr.l.style.left=event.pageX-crr.l.clientWidth+'px';
-								crr.l.style.top=event.pageY-crr.l.clientHeight+'px';
+								if(e.altKey){
+								crr.l.style.top=event.pageY-crr.l.clientHeight+'px';}
 							}else if(crr.l===cr_pr[2]){
 								crr.l.style.left=event.pageX+'px';
-								crr.l.style.top=event.pageY-crr.l.clientHeight+'px';
+								if(e.altKey){
+								crr.l.style.top=event.pageY-crr.l.clientHeight+'px';}
 							}else{
 								crr.l.style.left=event.pageX+'px';
-								crr.l.style.top=event.pageY+'px';
+								if(e.altKey){
+								crr.l.style.top=event.pageY+'px';}
 							}
 								
 								doTransform(e,crr.v,cr_pr,true);
