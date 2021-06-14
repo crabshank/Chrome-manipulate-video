@@ -191,10 +191,10 @@ if (videoTags.length==0){
 								crnrs[2].setAttribute('top_c',window.getComputedStyle(crnrs[2],null).top);	
 								crnrs[3].setAttribute('left_c',window.getComputedStyle(crnrs[3],null).left);
 								crnrs[3].setAttribute('top_c',window.getComputedStyle(crnrs[3],null).top);
-								sdivs[i].setAttribute('wdt_v',vids[i].clientWidth);
-								sdivs[i].setAttribute('hgt_v',vids[i].clientHeight);
 								
-						function switchCnrs(el,vid){
+								
+								
+														function switchCnrs(el,vid){
 								event.preventDefault();
 								event.stopPropagation();	
 
@@ -202,34 +202,37 @@ if (videoTags.length==0){
 								if(vid.getAttribute('toAdj')==='false'){
 								
 										for(let k=0, len=crnrs.length; k<len; k++){
-											if (k==0){
-												crnrs[k].setAttribute('left_c',window.getComputedStyle(crnrs[k],null).left);
-												crnrs[k].setAttribute('top_c',window.getComputedStyle(crnrs[k],null).top);	
-												crnrs[k].style.top='0px';
-												crnrs[k].style.left='0px';
-											}else if (k==1){
-												crnrs[k].setAttribute('left_c',window.getComputedStyle(crnrs[k],null).left);
-												crnrs[k].setAttribute('top_c',window.getComputedStyle(crnrs[k],null).top);	
-												crnrs[k].style.top='0px';
-												crnrs[k].style.left=(vid.clientWidth-crnrs[k].clientWidth)+'px';
-											}else if (k==2){
-												crnrs[k].setAttribute('left_c',window.getComputedStyle(crnrs[k],null).left);
-												crnrs[k].setAttribute('top_c',window.getComputedStyle(crnrs[k],null).top);	
-												crnrs[k].style.left='0px';
-												crnrs[k].style.top=(vid.clientHeight-crnrs[k].clientHeight)+'px';
-											}else if(k==3){
-												crnrs[k].setAttribute('left_c',window.getComputedStyle(crnrs[k],null).left);
-												crnrs[k].setAttribute('top_c',window.getComputedStyle(crnrs[k],null).top);	
-												crnrs[k].style.top=(vid.clientHeight-crnrs[k].clientHeight)+'px';
-												crnrs[k].style.left=(vid.clientWidth-crnrs[k].clientWidth)+'px';
-											}
+							if (k==0){
+								crnrs[k].style.top='0px';
+								crnrs[k].style.left='0px';
+								crnrs[k].setAttribute('left_prp',0);
+								crnrs[k].setAttribute('top_prp',0);
+							}else if (k==1){
+								crnrs[k].style.top='0px';
+								let lf1=video.clientWidth-crnrs[k].clientWidth;
+								crnrs[k].style.left=lf1+'px';
+								crnrs[k].setAttribute('left_prp',lf1/video.clientWidth);
+								crnrs[k].setAttribute('top_prp',0);	
+							}else if (k==2){
+								crnrs[k].style.left='0px';
+								let tp2=video.clientHeight-crnrs[k].clientHeight;
+								crnrs[k].style.top=tp2+'px';
+								crnrs[k].setAttribute('left_prp',0);
+								crnrs[k].setAttribute('top_prp',tp2/video.clientHeight);
+							}else if(k==3){
+								let lf3=video.clientWidth-crnrs[k].clientWidth;
+								let tp3=video.clientHeight-crnrs[k].clientHeight;
+								crnrs[k].style.top=tp3+'px';
+								crnrs[k].style.left=lf3+'px';
+								crnrs[k].setAttribute('left_prp',lf3/video.clientWidth);
+								crnrs[k].setAttribute('top_prp',tp3/video.clientHeight);
+							}
 											
 									crnrs[k].setAttribute("md", "false");
 									crnrs[k].style.backgroundColor='';
 									crnrs[k].style.color='';
 										}
-										el.setAttribute('wdt_v',vid.clientWidth);
-								el.setAttribute('hgt_v',vid.clientHeight);
+
 												vid.style.transformOrigin="";
 												vid.style.transform="";
 											vid.setAttribute('toAdj','true');
@@ -246,7 +249,7 @@ if (videoTags.length==0){
 								
 						}
 
-								function resetCnrs(el,event){
+								function resetCnrs(el,event,video){
 									event.preventDefault();
 								event.stopPropagation();
 								el.setAttribute("md", "dbl");
@@ -257,15 +260,27 @@ if (videoTags.length==0){
 							if (k==0){
 								corners[k].style.top='0px';
 								corners[k].style.left='0px';
+								corners[k].setAttribute('left_prp',0);
+								corners[k].setAttribute('top_prp',0);
 							}else if (k==1){
 								corners[k].style.top='0px';
-								corners[k].style.left=(video.clientWidth-corners[k].clientWidth)+'px';
+								let lf1=video.clientWidth-corners[k].clientWidth;
+								corners[k].style.left=lf1+'px';
+								corners[k].setAttribute('left_prp',lf1/video.clientWidth);
+								corners[k].setAttribute('top_prp',0);	
 							}else if (k==2){
 								corners[k].style.left='0px';
-								corners[k].style.top=(video.clientHeight-corners[k].clientHeight)+'px';
+								let tp2=video.clientHeight-corners[k].clientHeight;
+								corners[k].style.top=tp2+'px';
+								corners[k].setAttribute('left_prp',0);
+								corners[k].setAttribute('top_prp',tp2/video.clientHeight);
 							}else if(k==3){
-								corners[k].style.top=(video.clientHeight-corners[k].clientHeight)+'px';
-								corners[k].style.left=(video.clientWidth-corners[k].clientWidth)+'px';
+								let lf3=video.clientWidth-corners[k].clientWidth;
+								let tp3=video.clientHeight-corners[k].clientHeight;
+								corners[k].style.top=tp3+'px';
+								corners[k].style.left=lf3+'px';
+								corners[k].setAttribute('left_prp',lf3/video.clientWidth);
+								corners[k].setAttribute('top_prp',tp3/video.clientHeight);
 							}
 							
 								corners[k].setAttribute('left_c',window.getComputedStyle(corners[k],null).left);
@@ -285,19 +300,27 @@ if (videoTags.length==0){
 							//console.log(`Current index: ${ix}`);
 							//console.log(el);
 							if (ix==1){
-								el.style.left=(rect.right-rect.x-el.clientWidth)+'px';
+								let lf1=rect.right-rect.x-el.clientWidth;
+								el.style.left=lf1+'px';
+								crnrs[ix].setAttribute('left_prp',lf1/rect.width);
 							}else if (ix==2){
-								el.style.top=(rect.bottom-rect.y-el.clientHeight)+'px';
+								let tp2=rect.bottom-rect.y-el.clientHeight;
+								el.style.top=tp2+'px';
+								crnrs[ix].setAttribute('top_prp',tp2/rect.height);
 							}else if (ix==3){
-								el.style.top=(rect.bottom-rect.y-el.clientHeight)+'px';
-								el.style.left=(rect.right-rect.x-el.clientWidth)+'px';
+								let tp3=rect.bottom-rect.y-el.clientHeight;
+								let lf3=rect.right-rect.x-el.clientWidth
+								el.style.top=tp3+'px';
+								el.style.left=lf3+'px';
+								crnrs[ix].setAttribute('left_prp',lf3/rect.width);
+								crnrs[ix].setAttribute('top_prp',tp3/rect.height);
 							}
 								el.setAttribute('left_c',window.getComputedStyle(el,null).left);
 								el.setAttribute('top_c',window.getComputedStyle(el,null).top);	
 							
 							el.onpointerdown = (event) => {
 								if(event.ctrlKey){
-									resetCnrs(el,event);
+									resetCnrs(el,event,crr.v);
 								}else{
 									if(el.getAttribute("md")=="dbl"){
 									el.setAttribute("md", "false");
@@ -312,10 +335,9 @@ if (videoTags.length==0){
 							
 							
 							el.ondblclick = (event) => {
-								resetCnrs(el,event);
+								resetCnrs(el,event,crr.v);
 							}	
-							sdivs[i].setAttribute('wdt_v',video.clientWidth);
-								sdivs[i].setAttribute('hgt_v',video.clientHeight);
+
 								
 							
 						});
@@ -339,27 +361,26 @@ if (videoTags.length==0){
 						
 						document.addEventListener('fullscreenchange',() => {
 let cr=[...crr.l.parentNode.childNodes];
-let rect=crr.v.getBoundingClientRect();
+//let rect=crr.v.getBoundingClientRect();
 for (let k=0, len=cr.length; k<len;  k++){
 	let ml=0;
 	let mt=0;
 	 if (k==1){
-								ml=-0.5*cr[k].clientWidth;
+								ml=0.5*cr[k].clientWidth;
 							}else if (k==2){
-								mt=-0.5*cr[k].clientHeight;
+								mt=0.5*cr[k].clientHeight;
 							}else if(k==3){
-								mt=-0.5*cr[k].clientHeight;
-									ml=-0.5*cr[k].clientWidth;
+								mt=0.5*cr[k].clientHeight;
+									ml=0.5*cr[k].clientWidth;
 								}
-	let lf=((parseFloat(cr[k].getAttribute('left_c'))/parseFloat(crr.l.parentNode.getAttribute('wdt_v')))*rect.width+rect.left-ml)+'px';
-	let tp=((parseFloat(cr[k].getAttribute('top_c'))/parseFloat(crr.l.parentNode.getAttribute('hgt_v')))*rect.height+rect.top-mt)+'px';
+	let lf=(cr[k].getAttribute('left_prp')*crr.v.clientWidth+crr.v.clientLeft-ml)+'px';
+	let tp=(cr[k].getAttribute('top_prp')*crr.v.clientHeight+crr.v.clientTop-mt)+'px';
 									cr[k].style.left=lf;
 								cr[k].style.top=tp;
 								cr[k].setAttribute('left_c',lf);
-								cr[k].setAttribute('top_c',tp);	
+								cr[k].setAttribute('top_c',tp);
 									}
-									crr.l.parentNode.setAttribute('wdt_v',rect.width);
-								crr.l.parentNode.setAttribute('hgt_v',rect.height);
+
 								
 });
 						
@@ -390,21 +411,37 @@ let cr_pr=[...crr.l.parentNode.childNodes];
 						// TR BR BL
 							
 							if(crr.l===cr_pr[1]){
-								crr.l.style.left=event.pageX-crr.l.clientWidth+'px';
+								let lf1=event.pageX-crr.l.clientWidth;
+								crr.l.style.left=lf1+'px';
+								crr.l.setAttribute('left_prp',lf1/crr.v.clientWidth);
 								if(e.altKey){
-								crr.l.style.top=event.pageY+'px';}
+									crr.l.style.top=event.pageY+'px';
+									crr.l.setAttribute('top_prp',event.pageY/crr.v.clientHeight);
+								}
 							}else if(crr.l===cr_pr[3]){
-								crr.l.style.left=event.pageX-crr.l.clientWidth+'px';
+								let lf3=event.pageX-crr.l.clientWidth;
+								crr.l.style.left=lf3+'px';
+								crr.l.setAttribute('left_prp',lf3/crr.v.clientWidth);
 								if(e.altKey){
-								crr.l.style.top=event.pageY-crr.l.clientHeight+'px';}
+									let tp3=event.pageY-crr.l.clientHeight;
+									crr.l.style.top=tp3+'px';
+									crr.l.setAttribute('top_prp',tp3/crr.v.clientHeight);
+								}
 							}else if(crr.l===cr_pr[2]){
 								crr.l.style.left=event.pageX+'px';
+								crr.l.setAttribute('left_prp',event.pageX/crr.v.clientWidth);
 								if(e.altKey){
-								crr.l.style.top=event.pageY-crr.l.clientHeight+'px';}
+									let tp2=event.pageY-crr.l.clientHeight;
+									crr.l.style.top=tp2+'px';
+									crr.l.setAttribute('top_prp',tp2/crr.v.clientHeight);
+								}
 							}else{
 								crr.l.style.left=event.pageX+'px';
+								crr.l.setAttribute('left_prp',event.pageX/crr.v.clientWidth);
 								if(e.altKey){
-								crr.l.style.top=event.pageY+'px';}
+								crr.l.style.top=event.pageY+'px';
+								crr.l.setAttribute('top_prp',event.pageY/crr.v.clientHeight);
+								}
 							}
 								
 								doTransform(e,crr.v,cr_pr,true);
@@ -465,9 +502,6 @@ function doTransform(e,vid,crnrs,local){
 								crnrs[3].setAttribute('left_c',window.getComputedStyle(crnrs[3],null).left);
 								crnrs[3].setAttribute('top_c',window.getComputedStyle(crnrs[3],null).top);
 								
-								crnrs[0].parentElement.setAttribute('wdt_v',vid.clientWidth);
-								crnrs[0].parentElement.setAttribute('hgt_v',vid.clientHeight);
-								
 		
 // TL TR BR BL		
      let src=[ 
@@ -483,6 +517,17 @@ function doTransform(e,vid,crnrs,local){
 	  [Math.max(0,xy2.right-xy_v.left),Math.max(0,xy2.bottom-xy_v.top)],
 	  [Math.max(0,xy3.left-xy_v.left),Math.max(0,xy3.bottom-xy_v.top)]
 	  ];
+	  
+	  
+	  							crnrs[0].setAttribute('left_prp',dst[0][0]/vid.clientWidth);
+								crnrs[0].setAttribute('top_prp',dst[0][1]/vid.clientHeight);
+	  							crnrs[1].setAttribute('left_prp',dst[1][0]/vid.clientWidth);
+								crnrs[1].setAttribute('top_prp',dst[1][1]/vid.clientHeight);
+	  							crnrs[3].setAttribute('left_prp',dst[2][0]/vid.clientWidth);
+								crnrs[3].setAttribute('top_prp',dst[2][1]/vid.clientHeight);	
+								crnrs[2].setAttribute('left_prp',dst[3][0]/vid.clientWidth);
+								crnrs[2].setAttribute('top_prp',dst[3][1]/vid.clientHeight);
+
 									
 						  let count = 4;
   let a = [];
