@@ -102,7 +102,9 @@ if (videoTags.length==0){
 						}
 		
 		
-		                        function b_hide(b) {								
+		                        function b_hide(b,vid) {
+								var v_par= vid.parentElement;
+								 v_par.style.setProperty("cursor", "initial", "important");
 								 corners=[...b.childNodes];
 								 b.style.setProperty("display", "initial", "important");
 								 b.style.setProperty("visibility", "initial", "important");
@@ -133,6 +135,9 @@ if (videoTags.length==0){
 								if(!msd){
 								b.style.setProperty("display", "none", "important");
 								b.style.setProperty("visibility", "hidden", "important");
+								if(document.fullscreen || document.webkitIsFullScreen){
+									v_par.style.setProperty("cursor", "none", "important");
+								}
 								}
 								}, 6000);
 								
@@ -328,7 +333,7 @@ if (videoTags.length==0){
 								if(crr.l.getAttribute("md")=="true"){
 							btclk(e);
 							}
-							b_hide(crr.l.parentNode);
+							b_hide(crr.l.parentNode,crr.v);
 						});					
 						
 						
@@ -424,7 +429,7 @@ function doTransform(e,vid,crnrs,local){
 								let xy3=crnrs[2].getBoundingClientRect();
 								
 								if(invis){
-								 b_hide(crnrs[0].parentElement);
+								 b_hide(crnrs[0].parentElement,vid);
 								}
 								
 								vid.style.transform='';
