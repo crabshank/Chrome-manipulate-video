@@ -287,8 +287,6 @@ if (videoTags.length==0){
 								corners[k].setAttribute('top_c',window.getComputedStyle(corners[k],null).top);	
 
 							}
-							el.parentNode.setAttribute('wdt_v',video.clientWidth);
-								el.parentNode.setAttribute('hgt_v',video.clientHeight);
 							crr.v.style.transformOrigin="";
 							crr.v.style.transform="";
 						}
