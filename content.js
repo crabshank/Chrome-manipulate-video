@@ -5,6 +5,11 @@ var vid_css=[];
 var corners=[];
 var crr={v:'',l:0,f:2};
 var timer;
+
+function getClientRect(el){
+	return {bottom: el.clientHeight+el.clientTop, height: el.clientHeight, left: el.clientLeft, right: el.clientLeft+el.clientWidth, top: el.clientTop, width: el.clientWidth};
+}
+
 function get_src(vid){
 	if (vid.src !== "") {
 		return vid.src;
@@ -49,8 +54,40 @@ function gotMessage(message, sender, sendResponse) {
 		switch (message.message) {
 						
                 case "Scan!":
+				
+				function rstCorners(vid, corners){
+								var vRect=getClientRect(vid);
+								for(let k=0, len=corners.length; k<len; k++){
+							if (k==0){
+								corners[k].style.top=vRect.top;
+								corners[k].style.left=vRect.left;
+								corners[k].setAttribute('left_prp',0);
+								corners[k].setAttribute('top_prp',0);
+							}else if (k==1){
+								corners[k].style.top=vRect.top;
+								let lf1=vRect.right-corners[k].clientWidth;
+								corners[k].style.left=lf1+'px';
+								corners[k].setAttribute('left_prp',(lf1-vRect.left)/vRect.width);
+								corners[k].setAttribute('top_prp',0);	
+							}else if (k==2){
+								corners[k].style.left=vRect.left;
+								let tp2=vRect.bottom-corners[k].clientHeight;
+								corners[k].style.top=tp2+'px';
+								corners[k].setAttribute('left_prp',0);
+								corners[k].setAttribute('top_prp',(tp2-vRect.top)/vRect.height);
+							}else if(k==3){
+								let lf3=vRect.right-corners[k].clientWidth;
+								let tp3=vRect.bottom-corners[k].clientHeight;
+								corners[k].style.top=tp3+'px';
+								corners[k].style.left=lf3+'px';
+								corners[k].setAttribute('left_prp',(lf3-vRect.left)/vRect.width);
+								corners[k].setAttribute('top_prp',(tp3-vRect.top)/vRect.height);
+							}
+								}
+}
+				
 
-						getStrms();
+
 						function getStrms(){
 
 						                        var tmpVidTags = [
@@ -101,6 +138,7 @@ if (videoTags.length==0){
                         
 						}
 		
+								getStrms();
 		
 		                        function b_hide(b,vid) {
 								var v_par= vid.parentElement;
@@ -200,33 +238,10 @@ if (videoTags.length==0){
 
 								let crnrs=[...el.childNodes];
 								if(vid.getAttribute('toAdj')==='false'){
+									
+									 rstCorners(vid, crnrs);
 								
 										for(let k=0, len=crnrs.length; k<len; k++){
-							if (k==0){
-								crnrs[k].style.top='0px';
-								crnrs[k].style.left='0px';
-								crnrs[k].setAttribute('left_prp',0);
-								crnrs[k].setAttribute('top_prp',0);
-							}else if (k==1){
-								crnrs[k].style.top='0px';
-								let lf1=video.clientWidth-crnrs[k].clientWidth;
-								crnrs[k].style.left=lf1+'px';
-								crnrs[k].setAttribute('left_prp',lf1/video.clientWidth);
-								crnrs[k].setAttribute('top_prp',0);	
-							}else if (k==2){
-								crnrs[k].style.left='0px';
-								let tp2=video.clientHeight-crnrs[k].clientHeight;
-								crnrs[k].style.top=tp2+'px';
-								crnrs[k].setAttribute('left_prp',0);
-								crnrs[k].setAttribute('top_prp',tp2/video.clientHeight);
-							}else if(k==3){
-								let lf3=video.clientWidth-crnrs[k].clientWidth;
-								let tp3=video.clientHeight-crnrs[k].clientHeight;
-								crnrs[k].style.top=tp3+'px';
-								crnrs[k].style.left=lf3+'px';
-								crnrs[k].setAttribute('left_prp',lf3/video.clientWidth);
-								crnrs[k].setAttribute('top_prp',tp3/video.clientHeight);
-							}
 											
 									crnrs[k].setAttribute("md", "false");
 									crnrs[k].style.backgroundColor='';
@@ -256,36 +271,11 @@ if (videoTags.length==0){
 								crr.v=video;
 								crr.l=el;
 							 corners=[...el.parentNode.childNodes];
+							 rstCorners(video, corners);
+							 
 							for(let k=0, len=corners.length; k<len; k++){
-							if (k==0){
-								corners[k].style.top='0px';
-								corners[k].style.left='0px';
-								corners[k].setAttribute('left_prp',0);
-								corners[k].setAttribute('top_prp',0);
-							}else if (k==1){
-								corners[k].style.top='0px';
-								let lf1=video.clientWidth-corners[k].clientWidth;
-								corners[k].style.left=lf1+'px';
-								corners[k].setAttribute('left_prp',lf1/video.clientWidth);
-								corners[k].setAttribute('top_prp',0);	
-							}else if (k==2){
-								corners[k].style.left='0px';
-								let tp2=video.clientHeight-corners[k].clientHeight;
-								corners[k].style.top=tp2+'px';
-								corners[k].setAttribute('left_prp',0);
-								corners[k].setAttribute('top_prp',tp2/video.clientHeight);
-							}else if(k==3){
-								let lf3=video.clientWidth-corners[k].clientWidth;
-								let tp3=video.clientHeight-corners[k].clientHeight;
-								corners[k].style.top=tp3+'px';
-								corners[k].style.left=lf3+'px';
-								corners[k].setAttribute('left_prp',lf3/video.clientWidth);
-								corners[k].setAttribute('top_prp',tp3/video.clientHeight);
-							}
-							
 								corners[k].setAttribute('left_c',window.getComputedStyle(corners[k],null).left);
 								corners[k].setAttribute('top_c',window.getComputedStyle(corners[k],null).top);	
-
 							}
 							crr.v.style.transformOrigin="";
 							crr.v.style.transform="";
@@ -294,25 +284,11 @@ if (videoTags.length==0){
 						let corners=[...sdivs[i].childNodes];
 						crr.v=video;
 						crr.l=corners[0];
+						
+						 rstCorners(video, corners);
+						 
 						corners.forEach((el, ix) => {
-							//console.log(`Current index: ${ix}`);
-							//console.log(el);
-							if (ix==1){
-								let lf1=rect.right-rect.x-el.clientWidth;
-								el.style.left=lf1+'px';
-								crnrs[ix].setAttribute('left_prp',lf1/rect.width);
-							}else if (ix==2){
-								let tp2=rect.bottom-rect.y-el.clientHeight;
-								el.style.top=tp2+'px';
-								crnrs[ix].setAttribute('top_prp',tp2/rect.height);
-							}else if (ix==3){
-								let tp3=rect.bottom-rect.y-el.clientHeight;
-								let lf3=rect.right-rect.x-el.clientWidth
-								el.style.top=tp3+'px';
-								el.style.left=lf3+'px';
-								crnrs[ix].setAttribute('left_prp',lf3/rect.width);
-								crnrs[ix].setAttribute('top_prp',tp3/rect.height);
-							}
+
 								el.setAttribute('left_c',window.getComputedStyle(el,null).left);
 								el.setAttribute('top_c',window.getComputedStyle(el,null).top);	
 							
@@ -359,7 +335,7 @@ if (videoTags.length==0){
 						
 						document.addEventListener('fullscreenchange',() => {
 let cr=[...crr.l.parentNode.childNodes];
-//let rect=crr.v.getBoundingClientRect();
+let rect=getClientRect(crr.v);
 for (let k=0, len=cr.length; k<len;  k++){
 	let ml=0;
 	let mt=0;
@@ -371,8 +347,8 @@ for (let k=0, len=cr.length; k<len;  k++){
 								mt=0.5*cr[k].clientHeight;
 									ml=0.5*cr[k].clientWidth;
 								}
-	let lf=(cr[k].getAttribute('left_prp')*crr.v.clientWidth+crr.v.clientLeft-ml)+'px';
-	let tp=(cr[k].getAttribute('top_prp')*crr.v.clientHeight+crr.v.clientTop-mt)+'px';
+	let lf=(cr[k].getAttribute('left_prp')*rect.width+rect.left-ml)+'px';
+	let tp=(cr[k].getAttribute('top_prp')*rect.height+rect.top-mt)+'px';
 									cr[k].style.left=lf;
 								cr[k].style.top=tp;
 								cr[k].setAttribute('left_c',lf);
