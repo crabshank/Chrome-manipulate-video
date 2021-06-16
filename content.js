@@ -7,7 +7,7 @@ var crr={v:'',l:0,f:2};
 var timer;
 
 function getClientRect(el){
-	return {bottom: el.clientHeight+el.clientTop, height: el.clientHeight, left: el.clientLeft, right: el.clientLeft+el.clientWidth, top: el.clientTop, width: el.clientWidth};
+	return {bottom: el.clientHeight+el.clientTop+el.offsetTop, height: el.clientHeight, left: el.clientLeft+el.offsetLeft, right: el.clientLeft+el.offsetLeft+el.clientWidth, top: el.clientTop+el.offsetTop, width: el.clientWidth};
 }
 
 function get_src(vid){
