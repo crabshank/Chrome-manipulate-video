@@ -199,23 +199,14 @@ if (videoTags.length==0){
 						sdivs[i] = document.createElement('section');
 						 sdivs[i].style.cssText = "display: initial !important; visibility: initial !important; z-index: "+Number.MAX_SAFE_INTEGER+" !important; position: absolute !important; background-color: transparent !important; pointer-events: none !important;";
                          video.insertAdjacentElement('beforebegin', sdivs[i]);
-						var rect = video.getBoundingClientRect();
-						var rect2 = sdivs[i].getBoundingClientRect();
+						var rect = getClientRect(video);
 						sdivs[i].style.height = rect.height+'px';
 						sdivs[i].style.width = rect.width+'px';
 						let h_off=rect.width;
 						let v_off=rect.height;
-						if(rect.left>rect2.left){
-							sdivs[i].style.left=(rect.left-rect2.left)+'px';
-						}else if(rect2.left>rect.left){
-							sdivs[i].style.left=(rect2.left-rect.left)+'px';
-						}
-						
-						if(rect.top>rect2.top){
-							sdivs[i].style.top=(rect.top-rect2.top)+'px';
-						}else if(rect2.top>rect.top){
-							sdivs[i].style.top=(rect2.top-rect.top)+'px';
-						}
+							sdivs[i].style.left=(rect.left)+'px';
+							sdivs[i].style.top=(rect.top)+'px';
+			
 						
 						sdivs[i].innerHTML='<div style="display: initial !important; visibility: initial !important; z-index: '+Number.MAX_SAFE_INTEGER+' !important; position: inherit; pointer-events: all; border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%;">TL</div><div style="display: initial !important; visibility: initial !important; z-index: '+Number.MAX_SAFE_INTEGER+' !important; position: inherit; pointer-events: all;  border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%;">TR</div><div style="display: initial !important; visibility: initial !important; z-index: '+Number.MAX_SAFE_INTEGER+' !important; pointer-events: all;  border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%; position: inherit;">BL</div><div style="display: initial !important; visibility: initial !important; z-index: '+Number.MAX_SAFE_INTEGER+' !important; pointer-events: all; border-color: cyan; border-width: 0.1ch; border-style: solid; border-radius: 50%; position: inherit;">BR</div>';
 						
