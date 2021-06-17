@@ -331,15 +331,15 @@ for (let k=0, len=cr.length; k<len;  k++){
 	let ml=0;
 	let mt=0;
 	 if (k==1){
-								ml=0.5*cr[k].clientWidth;
+								ml=-cr[k].clientWidth;
 							}else if (k==2){
-								mt=0.5*cr[k].clientHeight;
+								mt=-cr[k].clientHeight;
 							}else if(k==3){
-								mt=0.5*cr[k].clientHeight;
-									ml=0.5*cr[k].clientWidth;
+								mt=-cr[k].clientHeight;
+									ml=-cr[k].clientWidth;
 								}
-	let lf=(cr[k].getAttribute('left_prp')*rect.width+rect.left-ml)+'px';
-	let tp=(cr[k].getAttribute('top_prp')*rect.height+rect.top-mt)+'px';
+	let lf=(cr[k].getAttribute('left_prp')*rect.width+rect.left+ml)+'px';
+	let tp=(cr[k].getAttribute('top_prp')*rect.height+rect.top+mt)+'px';
 									cr[k].style.left=lf;
 								cr[k].style.top=tp;
 								cr[k].setAttribute('left_c',lf);
@@ -373,43 +373,45 @@ crr.f=0;
 								crr.l.style.color='magenta'; 	
 								
 let cr_pr=[...crr.l.parentNode.childNodes];
+
 						// TR BR BL
-							
+							vRect=getClientRect(crr.v);
 							if(crr.l===cr_pr[1]){
 								let lf1=event.pageX-crr.l.clientWidth;
 								crr.l.style.left=lf1+'px';
-								crr.l.setAttribute('left_prp',lf1/crr.v.clientWidth);
+								crr.l.setAttribute('left_prp',(lf1-vRect.left)/vRect.width);
 								if(e.altKey){
 									crr.l.style.top=event.pageY+'px';
-									crr.l.setAttribute('top_prp',event.pageY/crr.v.clientHeight);
+									crr.l.setAttribute('top_prp',(event.pageY-vRect.top)/vRect.height);
 								}
 							}else if(crr.l===cr_pr[3]){
 								let lf3=event.pageX-crr.l.clientWidth;
 								crr.l.style.left=lf3+'px';
-								crr.l.setAttribute('left_prp',lf3/crr.v.clientWidth);
+								crr.l.setAttribute('left_prp',(lf3-vRect.left)/vRect.width);
 								if(e.altKey){
 									let tp3=event.pageY-crr.l.clientHeight;
 									crr.l.style.top=tp3+'px';
-									crr.l.setAttribute('top_prp',tp3/crr.v.clientHeight);
+									crr.l.setAttribute('top_prp',(tp3-vRect.top)/vRect.height);
 								}
 							}else if(crr.l===cr_pr[2]){
 								crr.l.style.left=event.pageX+'px';
-								crr.l.setAttribute('left_prp',event.pageX/crr.v.clientWidth);
+								crr.l.setAttribute('left_prp',(event.pageX-vRect.left)/vRect.width);
 								if(e.altKey){
 									let tp2=event.pageY-crr.l.clientHeight;
 									crr.l.style.top=tp2+'px';
-									crr.l.setAttribute('top_prp',tp2/crr.v.clientHeight);
+									crr.l.setAttribute('top_prp',(tp2-vRect.top)/vRect.height);
 								}
 							}else{
 								crr.l.style.left=event.pageX+'px';
-								crr.l.setAttribute('left_prp',event.pageX/crr.v.clientWidth);
+								crr.l.setAttribute('left_prp',(event.pageX-vRect.left)/vRect.width);
 								if(e.altKey){
 								crr.l.style.top=event.pageY+'px';
-								crr.l.setAttribute('top_prp',event.pageY/crr.v.clientHeight);
+								crr.l.setAttribute('top_prp',(event.pageY-vRect.top)/vRect.height);
 								}
 							}
 								
 								doTransform(e,crr.v,cr_pr,true);
+
 
 								
 							}
@@ -425,10 +427,10 @@ function doTransform(e,vid,crnrs,local){
 									crnrs[0].parentElement.style.setProperty("visibility", "visible", "important");
 								}
 								
-								let xy0=crnrs[0].getBoundingClientRect();
-								let xy1=crnrs[1].getBoundingClientRect();
-								let xy2=crnrs[3].getBoundingClientRect();
-								let xy3=crnrs[2].getBoundingClientRect();
+								let xy0=getClientRect(crnrs[0]);
+								let xy1=getClientRect(crnrs[1]);
+								let xy2=getClientRect(crnrs[3]);
+								let xy3=getClientRect(crnrs[2]);
 								
 								if(invis){
 								 b_hide(crnrs[0].parentElement,vid);
@@ -452,10 +454,10 @@ function doTransform(e,vid,crnrs,local){
 									crnrs[3].style.top=(crr.l===crnrs[2])?crnrs[2].style.top:crnrs[3].style.top;
 									crnrs[2].style.top=(crr.l===crnrs[3])?crnrs[3].style.top:crnrs[2].style.top;
 									
-									xy0=crnrs[0].getBoundingClientRect();
-									xy1=crnrs[1].getBoundingClientRect();
-									xy2=crnrs[3].getBoundingClientRect();
-									xy3=crnrs[2].getBoundingClientRect();
+								 xy0=getClientRect(crnrs[0]);
+								 xy1=getClientRect(crnrs[1]);
+								 xy2=getClientRect(crnrs[3]);
+								 xy3=getClientRect(crnrs[2]);
 								}
 		
 								crnrs[0].setAttribute('left_c',window.getComputedStyle(crnrs[0],null).left);
