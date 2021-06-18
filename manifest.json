@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Manipulate video",
   "version": "2021.6",
   "content_scripts": [
@@ -8,12 +8,12 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["numeric-1.2.6.min.js","content.js"]
+      "js": ["numeric-1.2.6_stripped.js","content.js"]
     }
   ],
   "permissions": ["tabs","activeTab"],
     "incognito": "split",
-  "browser_action": {
+  "action": {
     "default_icon": "icon.png",
     "default_popup": "index.html",
     "default_title": "Manipulate video"
