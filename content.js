@@ -346,9 +346,7 @@ if (videoTags.length==0){
 
 								let crnrs=[...el.childNodes];
 								if(vid.getAttribute('toAdj')==='false'){
-									
-									crnrs=rstCorners(vid, crnrs);
-								
+
 										for(let k=0, len=crnrs.length; k<len; k++){
 											
 									crnrs[k].setAttribute("md", "false");
