@@ -3,8 +3,9 @@ var sdivs=[];
 var vids=[];
 var vid_css=[];
 var corners=[];
-var crr={v:'',l:0,f:2};
+var crr={v:'',l:0,f:2,style:''};
 var timer;
+var observer=null;
 
 function getClientRect(el,offst){
 	if(offst){
@@ -125,10 +126,32 @@ function simpleCopyArray(array){
 chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage(message, sender, sendResponse) {
-        //console.log(message);
+	//console.log(message);
 		switch (message.message) {
 						
                 case "Scan!":
+				
+					
+function resetStyle(){
+	try{
+		crr.v.style.cssText=crr.style;
+	  }catch(e){;}
+}
+
+if (observer==null) {
+
+observer = new MutationObserver((mutations) => {
+		resetStyle();
+});
+
+observer.observe(document, {
+			attributeFilter: ["style"],
+			childList: true,
+			subtree: true,
+			attributeOldValue: true
+});
+
+}
 				
 				function rstCorners(vid, corners){
 								var vRect=getClientRect(vid,true);
@@ -356,6 +379,7 @@ if (videoTags.length==0){
 
 												vid.style.transformOrigin="";
 												vid.style.transform="";
+												crr.style=(vid===crr.v)?vid.style.cssText:crr.style;
 											vid.setAttribute('toAdj','true');
 								}else{
 										for(let k=0, len=crnrs.length; k<len; k++){
@@ -385,6 +409,7 @@ if (videoTags.length==0){
 
 							crr.v.style.transformOrigin="";
 							crr.v.style.transform="";
+							crr.style=crr.v.style.cssText;
 						}
 						
 						let corners=[...sdivs[i].childNodes];
@@ -625,6 +650,7 @@ function doTransform(e,vid,crnrs,local){
 								}
 								
 								vid.style.transform='';
+								crr.style=(vid===crr.v)?vid.style.cssText:crr.style;
 								let xy_v=vid.getBoundingClientRect();
 								
 								if(!!e && !e.altKey && local){
@@ -755,6 +781,7 @@ function doTransform(e,vid,crnrs,local){
   vid.style.setProperty('transform-origin','top left','important');
   vid.style.setProperty('transition','none','important');
   vid.style.setProperty('-webkit-transition','none','important');
+  crr.style=(vid===crr.v)?vid.style.cssText:crr.style;
   
   if(local){
   crr.f=1;
@@ -762,7 +789,8 @@ function doTransform(e,vid,crnrs,local){
   
   //Source: szym - https://stackoverflow.com/a/36217808
 }
-                        break;
+
+                  break;
 						
                 default:
                         ;
