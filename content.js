@@ -5,6 +5,7 @@ var vid_css=[];
 var corners=[];
 var crr={v:'',l:0,f:2,style:''};
 var timer;
+var timer2;
 var observer=null;
 
 function getClientRect(el,offst){
@@ -141,7 +142,14 @@ function resetStyle(){
 if (observer==null) {
 
 observer = new MutationObserver((mutations) => {
+	
+if (timer2) {
+	clearTimeout(timer2);
+}
+timer2 = setTimeout(() => {
 		resetStyle();
+},250);
+		
 });
 
 observer.observe(document, {
