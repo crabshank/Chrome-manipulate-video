@@ -146,11 +146,13 @@ if (observer==null) {
 observer = new MutationObserver((mutations) => {
 	let ix=mutations.findIndex((m)=>{return m.target===crr.v;});
 	
-if (timer2) {
-	clearTimeout(timer2);
-}
+if(ix>=0){	
 
-if(ix>=0){
+	if (timer2) {
+		clearTimeout(timer2);
+	}
+
+
 	timer2 = setTimeout(() => {
 			resetStyle();
 	},250);
