@@ -142,7 +142,7 @@ function resetStyle(){
 if (observer==null) {
 
 observer = new MutationObserver((mutations) => {
-	let ix=mutations.findIndex((m)=>{return m.taget===crr.v;});
+	let ix=mutations.findIndex((m)=>{return m.target===crr.v;});
 	
 if (timer2 || ix<0) {
 	clearTimeout(timer2);
