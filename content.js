@@ -136,6 +136,7 @@ function gotMessage(message, sender, sendResponse) {
 function resetStyle(){
 	try{
 		crr.v.style.cssText=crr.style;
+		crr.v.style.setProperty('transition','none','important');
 	  }catch(e){;}
 }
 
