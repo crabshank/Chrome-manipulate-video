@@ -3,7 +3,7 @@ var sdivs=[];
 var vids=[];
 var vid_css=[];
 var corners=[];
-var crr={v:'',l:0,f:2,style:''};
+var crr={v:'',l:0,f:2,style:{tr:'', to:''}};
 var timer;
 var timer2;
 var observer=null;
@@ -135,8 +135,9 @@ function gotMessage(message, sender, sendResponse) {
 					
 function resetStyle(){
 	try{
-		crr.v.style.cssText=crr.style;
 		crr.v.style.setProperty('transition','none','important');
+		crr.v.style.setProperty('transform-origin',crr.style.to,'important');
+		crr.v.style.setProperty('transform',crr.style.tr,'important');
 	  }catch(e){;}
 }
 
@@ -162,6 +163,10 @@ observer.observe(document, {
 			childList: true,
 			subtree: true,
 			attributeOldValue: true
+});
+
+document.addEventListener('fullscreenchange',(event)=>{
+	 resetStyle();
 });
 
 }
@@ -392,7 +397,10 @@ if (videoTags.length==0){
 
 												vid.style.transformOrigin="";
 												vid.style.transform="";
-												crr.style=(vid===crr.v)?vid.style.cssText:crr.style;
+												if(vid===crr.v){
+													crr.style.to='';
+													crr.style.tr='';
+												}
 											vid.setAttribute('toAdj','true');
 								}else{
 										for(let k=0, len=crnrs.length; k<len; k++){
@@ -422,7 +430,8 @@ if (videoTags.length==0){
 
 							crr.v.style.transformOrigin="";
 							crr.v.style.transform="";
-							crr.style=crr.v.style.cssText;
+								crr.style.to='';
+								crr.style.tr='';
 						}
 						
 						let corners=[...sdivs[i].childNodes];
@@ -663,7 +672,14 @@ function doTransform(e,vid,crnrs,local){
 								}
 								
 								vid.style.transform='';
-								crr.style=(vid===crr.v)?vid.style.cssText:crr.style;
+								
+									if(vid===crr.v){
+													let cs=window.getComputedStyle(vid,null);
+													crr.style.to=cs["transform-origin"];
+													crr.style.tr='';
+									}
+								
+								
 								let xy_v=vid.getBoundingClientRect();
 								
 								if(!!e && !e.altKey && local){
@@ -794,7 +810,13 @@ function doTransform(e,vid,crnrs,local){
   vid.style.setProperty('transform-origin','top left','important');
   vid.style.setProperty('transition','none','important');
   vid.style.setProperty('-webkit-transition','none','important');
-  crr.style=(vid===crr.v)?vid.style.cssText:crr.style;
+  
+	if(vid===crr.v){
+					crr.style.to='top left';
+					crr.style.tr=transform;
+	}
+
+
   
   if(local){
   crr.f=1;
