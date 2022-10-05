@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Manipulate video",
-  "version": "2022.5",
+  "version": "2022.10",
   "content_scripts": [
     {
 	      "all_frames": true,

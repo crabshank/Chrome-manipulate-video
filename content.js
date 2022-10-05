@@ -142,20 +142,27 @@ function resetStyle(){
 }
 
 if (observer==null) {
-
+			var timer_tm=null;
 observer = new MutationObserver((mutations) => {
 	let ix=mutations.findIndex((m)=>{return m.target===crr.v;});
 	
-if(ix>=0){	
-
-	if (timer2) {
+	if(timer2){
 		clearTimeout(timer2);
+		if(performance.now()-timer_tm>=1000){
+			resetStyle();
+			timer_tm=performance.now();
+		}
 	}
-
-
+	
+if(ix>=0){
+	
 	timer2 = setTimeout(() => {
 			resetStyle();
 	},250);
+	
+	if(timer_tm ===null){
+		timer_tm=performance.now();
+	}
 }
 		
 });
@@ -172,6 +179,8 @@ document.addEventListener('fullscreenchange',(event)=>{
 });
 
 }
+
+
 				
 				function rstCorners(vid, corners){
 								var vRect=getClientRect(vid,true);
