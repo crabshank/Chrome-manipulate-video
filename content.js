@@ -60,33 +60,63 @@ function absBoundingClientRect(el){
 	return r;
 }
 
-function getTagNameShadow(docm, tgn){
+function keepMatchesShadow(els,slc,isNodeName){
+   if(slc===false){
+      return els;
+   }else{
+      let out=[];
+   for(let i=0, len=els.length; i<len; i++){
+      let n=els[i];
+           if(isNodeName){
+	            if((n.nodeName.toLocaleLowerCase())===slc){
+	                out.push(n);
+	            }
+           }else{ //selector
+	               if(!!n.matches && typeof n.matches!=='undefined' && n.matches(slc)){
+	                  out.push(n);
+	               }
+           }
+   	}
+   	return out;
+   	}
+}
+
+function getMatchingNodesShadow(docm, slc, isNodeName, onlyShadowRoots){
+slc=(isNodeName && slc!==false)?(slc.toLocaleLowerCase()):slc;
 var shrc=[docm];
 var shrc_l=1;
-
+var out=[];
 let srCnt=0;
 
 while(srCnt<shrc_l){
-	allNodes=[shrc[srCnt],...shrc[srCnt].querySelectorAll('*')];
-	for(let i=0, len=allNodes.length; i<len; i++){
-		if(!!allNodes[i] && typeof allNodes[i] !=='undefined' && allNodes[i].tagName===tgn && i>0){
-			shrc.push(allNodes[i]);
-		}
-
-		if(!!allNodes[i].shadowRoot && typeof allNodes[i].shadowRoot !=='undefined'){
-			let c=allNodes[i].shadowRoot.children;
-			shrc.push(...c);
-		}
+	let curr=shrc[srCnt];
+	let sh=(!!curr.shadowRoot && typeof curr.shadowRoot !=='undefined')?true:false;
+	let nk=keepMatchesShadow([curr],slc,isNodeName);
+	let nk_l=nk.length;
+	
+	if( !onlyShadowRoots && nk_l>0){  
+		out.push(...nk);
 	}
+	
+	shrc.push(...curr.childNodes);
+	
+	if(sh){
+		   let cs=curr.shadowRoot;
+		   let csc=[...cs.childNodes];
+			   if(onlyShadowRoots){
+			      if(nk_l>0){
+			       out.push({root:nk[0], childNodes:csc});
+			      }
+			   }
+			   shrc.push(...csc);
+	}
+
 	srCnt++;
 	shrc_l=shrc.length;
 }
-	shrc=shrc.slice(1);
-	let out=shrc.filter((c)=>{return c.tagName===tgn;});
-	
-	return out;
-}
 
+return out;
+}
 function get_src(vid){
 	if (vid.src !== "") {
 		return vid.src;
@@ -100,13 +130,12 @@ function get_src(vid){
 function removeEls(d, array) {
     var newArray = [];
     for (let i = 0; i < array.length; i++) {
-        if (array[i] != d) {
+        if (array[i] !==d) {
             newArray.push(array[i]);
         }
     }
     return newArray;
 }
-
 
 function eligVid(vid){
 if((get_src(vid)!='') && (vid.readyState != 0)){
@@ -144,7 +173,7 @@ function resetStyle(){
 if (observer==null) {
 			var timer_tm=null;
 observer = new MutationObserver((mutations) => {
-	let ix=mutations.findIndex((m)=>{return m.target===crr.v;});
+	let ix=mutations.findIndex((m)=>{return m.target.isSameNode(crr.v);});
 	
 	if(timer2){
 		clearTimeout(timer2);
@@ -225,13 +254,11 @@ document.addEventListener('fullscreenchange',(event)=>{
 
 								return corners;
 }
-				
-
 
 						function getStrms(){
 
 						                        var tmpVidTags = [
-    ...getTagNameShadow(document,'VIDEO')
+    ...getMatchingNodesShadow(document,'VIDEO',true,false)
 ];
 
 if (videoTags.length==0){
@@ -262,9 +289,7 @@ if (videoTags.length==0){
 		}
 
 }
-   
-
-						
+  
 						for (let i = trk; i<videoTags.length; i++) {
                             createbutn(i, videoTags[i], get_src(videoTags[i]));
 						}
@@ -408,7 +433,7 @@ if (videoTags.length==0){
 
 												vid.style.transformOrigin="";
 												vid.style.transform="";
-												if(vid===crr.v){
+												if(vid.isSameNode(crr.v)){
 													crr.style.to='';
 													crr.style.tr='';
 												}
@@ -684,7 +709,7 @@ function doTransform(e,vid,crnrs,local){
 								
 								vid.style.transform='';
 								
-									if(vid===crr.v){
+									if(vid.isSameNode(crr.v)){
 													let cs=window.getComputedStyle(vid,null);
 													crr.style.to=cs["transform-origin"];
 													crr.style.tr='';
@@ -822,7 +847,7 @@ function doTransform(e,vid,crnrs,local){
   vid.style.setProperty('transition','none','important');
   vid.style.setProperty('-webkit-transition','none','important');
   
-	if(vid===crr.v){
+	if(vid.isSameNode(crr.v)){
 					crr.style.to='top left';
 					crr.style.tr=transform;
 	}
