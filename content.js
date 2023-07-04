@@ -3,10 +3,18 @@ var sdivs=[];
 var vids=[];
 var vid_css=[];
 var corners=[];
-var crr={v:'',l:0,f:2,style:{tr:'', to:''}};
+var crr={v:'',l:0,f:2,style:{tr:'', to:'',firstDone:false}};
 var timer;
 var timer2;
 var observer=null;
+var rsz_observer=null;
+
+var onFs=function(){
+	return;
+}
+var resetCnrs=function(){
+	return;
+}
 
 function getClientRect(el,offst){
 	if(offst){
@@ -175,7 +183,7 @@ function resetStyle(){
 if (observer==null) {
 			var timer_tm=null;
 observer = new MutationObserver((mutations) => {
-	let ix=mutations.findIndex((m)=>{return m.target.isSameNode(crr.v);});
+	let ix=mutations.findIndex((m)=>{return m.target===crr.v;});
 	
 	if(timer2){
 		clearTimeout(timer2);
@@ -205,12 +213,18 @@ observer.observe(document, {
 			attributeOldValue: true
 });
 
-document.addEventListener('fullscreenchange',(event)=>{
-	 resetStyle();
-});
-
 }
 
+if (rsz_observer==null) {
+	rsz_observer = new ResizeObserver((entries) => {
+		resetCnrs(crr.l,null,crr.v,true);
+		if(crr.style.firstDone===true){
+			resetStyle();
+			onFs();
+		}
+	});
+	rsz_observer.observe(document.documentElement);
+}
 
 				
 				function rstCorners(vid, corners){
@@ -424,6 +438,7 @@ if (videoTags.length==0){
 								event.stopPropagation();	
 
 								let crnrs=[...el.childNodes];
+								crr.style.firstDone=true;
 								if(vid.getAttribute('toAdj')==='false'){
 
 										for(let k=0, len=crnrs.length; k<len; k++){
@@ -435,7 +450,7 @@ if (videoTags.length==0){
 
 												vid.style.transformOrigin="";
 												vid.style.transform="";
-												if(vid.isSameNode(crr.v)){
+												if(vid===crr.v){
 													crr.style.to='';
 													crr.style.tr='';
 												}
@@ -453,9 +468,11 @@ if (videoTags.length==0){
 								
 						}
 
-								function resetCnrs(el,event,video){
+								resetCnrs=function(el,event,video,not_totl){
+									if(event!==null){
 									event.preventDefault();
 								event.stopPropagation();
+									}
 								let sd=el.parentNode;
 								let vRct=getClientRect(video,false);
 								sd.style.left=(vRct.left)+'px';
@@ -463,13 +480,18 @@ if (videoTags.length==0){
 								el.setAttribute("md", "dbl");
 								crr.v=video;
 								crr.l=el;
-							 corners=[...el.parentNode.childNodes];
+								if(crr.style.firstDone===false){
+							corners=[...el.parentNode.childNodes];
 							 corners=rstCorners(video, corners);
-
+							 }
 							crr.v.style.transformOrigin="";
 							crr.v.style.transform="";
+								
+							
+							if(not_totl!==true){
 								crr.style.to='';
 								crr.style.tr='';
+							}
 						}
 						
 						let corners=[...sdivs[i].childNodes];
@@ -494,6 +516,7 @@ if (videoTags.length==0){
 							
 							el.onpointerdown = (event) => {
 								if(event.ctrlKey){
+									crr.style.firstDone=false;
 									resetCnrs(el,event,crr.v);
 								}else{
 									if(el.getAttribute("md")=="dbl"){
@@ -508,6 +531,7 @@ if (videoTags.length==0){
 							
 							
 							el.ondblclick = (event) => {
+								crr.style.firstDone=false;
 								resetCnrs(el,event,crr.v);
 							}	
 
@@ -529,6 +553,7 @@ if (videoTags.length==0){
 													
 									if(event.pageX >= rectC.left && event.pageX <= rectC.right && event.pageY >= rectC.top && event.pageY <= rectC.bottom){
 										if(event.ctrlKey){
+											crr.style.firstDone=false;
 											resetCnrs(crnrs[k],event,crr.v);
 										}else{
 											if(crnrs[k].getAttribute("md")=="dbl"){
@@ -559,6 +584,7 @@ if (videoTags.length==0){
 														};
 														
 										if(event.pageX >= rectC.left && event.pageX <= rectC.right && event.pageY >= rectC.top && event.pageY <= rectC.bottom){
+											crr.style.firstDone=false;
 											resetCnrs(crnrs[k],event,crr.v);
 											k=len-1;
 										}
@@ -585,8 +611,8 @@ if (videoTags.length==0){
 							b_hide(crr.l.parentNode,crr.v);
 						});					
 						
+onFs=function(){
 						
-						document.addEventListener('fullscreenchange',() => {
 let cr=[...crr.l.parentNode.childNodes];
 let rect=getClientRect(crr.v,true);
 for (let k=0, len=cr.length; k<len;  k++){
@@ -618,10 +644,8 @@ for (let k=0, len=cr.length; k<len;  k++){
 								cr[k].setAttribute('bottom_a',ar.bottom);	
 								
 									}
-
-								
-});
-						
+}
+				
 						window.addEventListener('keydown', e => {
 							if(e.keyCode===223 && e.ctrlKey && e.shiftKey){
 								for(let i=0; i<sdivs.length; i++){
@@ -634,7 +658,6 @@ for (let k=0, len=cr.length; k<len;  k++){
                        	
 							
                         }
-						
 
                         function btclk(e) {
 							if(crr.f>0){
@@ -646,7 +669,7 @@ crr.f=0;
 								crr.l.style.color='magenta'; 	
 								
 let cr_pr=[...crr.l.parentNode.childNodes];
-
+crr.style.firstDone=true;
 						// TR BR BL
 							vRect=getClientRect(crr.v,true);
 							if(crr.l===cr_pr[1]){
@@ -711,7 +734,7 @@ function doTransform(e,vid,crnrs,local){
 								
 								vid.style.transform='';
 								
-									if(vid.isSameNode(crr.v)){
+									if(vid===crr.v){
 													let cs=window.getComputedStyle(vid,null);
 													crr.style.to=cs["transform-origin"];
 													crr.style.tr='';
@@ -849,7 +872,7 @@ function doTransform(e,vid,crnrs,local){
   vid.style.setProperty('transition','none','important');
   vid.style.setProperty('-webkit-transition','none','important');
   
-	if(vid.isSameNode(crr.v)){
+	if(vid===crr.v){
 					crr.style.to='top left';
 					crr.style.tr=transform;
 	}
@@ -862,6 +885,8 @@ function doTransform(e,vid,crnrs,local){
   
   //Source: szym - https://stackoverflow.com/a/36217808
 }
+
+
 
                   break;
 						
