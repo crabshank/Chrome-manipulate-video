@@ -605,10 +605,27 @@ if (videoTags.length==0){
 						});
 
 						window.addEventListener('pointermove', e => {
-								if(crr.l.getAttribute("md")=="true"){
-							btclk(e);
+							let crnrs=[...crr.l.parentNode.childNodes];
+							let passth=false;
+							let t=e.target;
+							for (let i=0, len=crnrs.length; i<len;  i++){
+								if(crnrs[i]===t){
+									passth=true;
+									break;
+								}
 							}
-							b_hide(crr.l.parentNode,crr.v);
+							if(passth===false){
+								let wcs=window.getComputedStyle(t);
+								if(wcs['cursor']!=='none'){
+									passth=true;
+								}
+							}
+							if(passth===true){
+								if(crr.l.getAttribute("md")=="true"){
+									btclk(e);
+								}
+								b_hide(crr.l.parentNode,crr.v);
+							}
 						});					
 						
 onFs=function(){
