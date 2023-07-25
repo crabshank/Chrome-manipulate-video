@@ -606,12 +606,11 @@ if (videoTags.length==0){
 
 						window.addEventListener('pointermove', e => {
 							let passth=(crr.l.getAttribute("md")=="true")?true:false;
+							let t=e.target;
 							if(passth===true){
 									btclk(e);
 							}else{
 								let crnrs=[...crr.l.parentNode.childNodes];
-								
-								let t=e.target;
 								for (let i=0, len=crnrs.length; i<len;  i++){
 									if(crnrs[i]===t){
 										passth=true;
